@@ -1,0 +1,30 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Compile
+        run: javac -encoding UTF-8 -d out src/*.java
+      - name: Smoke test - start server and hit endpoints
+        run: |
+          java -cp out src.Server &
+          SERVER_PID=$!
+          sleep 3
+          curl -sf http://localhost:8080/ > /dev/null
+          curl -sf http://localhost:8080/shop > /dev/null
+          curl -sf http://localhost:8080/cart > /dev/null
+          curl -sf http://localhost:8080/product/1 > /dev/null
+          echo "All endpoints OK"
+          kill $SERVER_PID || true

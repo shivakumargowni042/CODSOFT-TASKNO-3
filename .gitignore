@@ -1,0 +1,15 @@
+# Compiled class files
+out/
+
+# Runtime data files
+users.json
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.class
